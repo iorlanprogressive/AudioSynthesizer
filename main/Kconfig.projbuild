@@ -1,0 +1,251 @@
+#Параметры конфигурации для sdkconfig
+
+menu "Конфигурация последовательного порта"
+	config BAUDRATE
+		int
+		prompt "Скорость"
+		default 115200
+		help
+			Скорость последовательного порта
+endmenu
+
+menu "Конфигурация нот"
+	config NOTES_COUNT
+		int
+		prompt "Количество нот"
+		default 120
+		range 1 120
+		help
+			Количество нот
+endmenu
+
+menu "Конфигурация частот"
+	config MIN_FREQ
+		int
+		prompt "Мин. частота (Гц)"
+		default 20
+		range 20 20000
+		help
+			Минимально возможная частота синтеза
+	
+	config MAX_FREQ
+		int
+		prompt "Макс. частота (Гц)"
+		default 20000
+		range MIN_FREQ 20000
+		help
+			Максимально возможная частота синтеза
+	
+	config FREQ_STEP
+		int
+		prompt "Шаг частот (Гц)"
+		default 1
+		help
+			Шаг изменения частоты
+endmenu
+
+menu "Конфигурация осциллятора"
+	config OSC_RESOLUTION
+		int
+		prompt "Разрешение"
+		default 50
+		help
+			Разрешение осциллятора (количество генерируемых значений за один период)
+endmenu
+
+menu "Конфигурация НЧ-осциллятора"
+	config LFO_RESOLUTION
+		int
+		prompt "Разрешение"
+		default 100
+		help
+			Разрешение НЧ-осциллятора (количество генерируемых значений за один период)
+endmenu
+
+menu "Конфигурация ADSR-огибающей"
+	config MIN_ATTACK
+		int
+		prompt "Мин. время атаки (мкс)"
+		default 10000
+		help
+			Минимальное время фазы ATTACK ADSR-огибающей
+			
+	config MAX_ATTACK
+		int
+		prompt "Макс. время атаки (мкс)"
+		default 1000000
+		help
+			Максимальное время фазы ATTACK ADSR-огибающей
+	
+	config MIN_DECAY
+		int
+		prompt "Мин. время спада (мкс)"
+		default 10000
+		help
+			Минимальное время фазы DECAY ADSR-огибающей
+			
+	config MAX_DECAY
+		int
+		prompt "Макс. время спада (мкс)"
+		default 1000000
+		help
+			Максимальное время фазы DECAY ADSR-огибающей
+	
+	config MIN_RELEASE
+		int
+		prompt "Мин. время затухания (мкс)"
+		default 10000
+		help
+			Минимальное время фазы RELEASE ADSR-огибающей
+			
+	config MAX_RELEASE
+		int
+		prompt "Макс. время затухания (мкс)"
+		default 1000000
+		help
+			Максимальное время фазы RELEASE ADSR-огибающей
+	
+	config ENVELOPE_RESOLUTION
+		int
+		prompt "Разрешение"
+		default 100
+		help
+			Разрешение ADSR-огибающей (количество генерируемых значений за один период)
+endmenu
+
+menu "Конфигурация линии задержки"
+	config MAX_DELAY
+		int
+		prompt "Макс. время задержки (мкс)"
+		default 500000
+		help
+			Максимальное время задержки для эффекта DELAY / ECHO
+endmenu
+
+menu "Конфигурация ЦАП"
+	menu "Параметры ЦАП"
+		config STEREO
+			bool
+			prompt "Стерео звук"
+			default y
+			help
+				Если включено, будет использоваться стеро режим ЦАП.
+				В противном случае будет использоваться моно режим ЦАП.
+				
+		config SAMPLERATE
+			int
+			prompt "Частота дискретизации"
+			default 44100
+			help
+				Частота дискретизации ЦАП
+				
+		choice BITDEPTH
+			prompt "Глубина дискретизации"
+			default BITDEPTH_32_BIT
+			help
+				Глубина дискретизации ЦАП
+				
+			config BITDEPTH_8_BIT
+				bool
+				prompt "8 бит"
+				
+			config BITDEPTH_16_BIT
+				bool
+				prompt "16 бит"
+				
+			config BITDEPTH_24_BIT
+				bool
+				prompt "24 бит"
+				
+			config BITDEPTH_32_BIT
+				bool
+				prompt "32 бит"
+		endchoice
+	endmenu
+	
+	menu "Пины шины I2S"
+		config I2S_BCLK_PIN
+			int
+			prompt "Пин BCLK"
+			default 19
+			help
+				Пин BCLK шины I2S
+		
+		config I2S_WS_PIN
+			int
+			prompt "Пин WS"
+			default 18
+			help
+				Пин WS шины I2S
+		
+		config I2S_DOUT_PIN
+			int
+			prompt "Пин DOUT"
+			default 5
+			help
+				Пин DOUT шины I2S
+	endmenu
+	
+	menu "Парметры задачи-обработчика"
+		config I2S_TASK_TAG
+			string
+			prompt "Тег"
+			default "I2S_handler"
+			help
+				Тег задачи-обработчика шины I2S
+		
+		config I2S_TASK_CORE
+			int
+			prompt "Ядро"
+			default 1
+			range 0 1
+			help
+				Ядро, на котором будет запущена задача-обработчик шины I2S
+		
+		config I2S_TASK_PRIORITY
+			int
+			prompt "Приоритет"
+			default 1
+			help
+				Приоритет задачи-обработчика шины I2S
+		
+		config I2S_STACK_SIZE
+			int
+			prompt "Размер стека"
+			default 2048
+			help
+				Размер стека задачи-обработчика шины I2S
+		
+		config I2S_BUFFER_SIZE
+			int
+			prompt "Размер буфера"
+			default 4096
+			help
+				Размер буфера данных шины I2S
+	endmenu
+endmenu
+
+menu "Конфигурация АЦП"
+	choice ADC_ATTEN
+		prompt "Затухание"
+		default ADC_ATTEN_DB_0
+		help
+			Затухание АЦП
+			
+		config ADC_ATTEN_DB_0
+			bool
+			prompt "0 dB"
+			
+		config ADC_ATTEN_DB_2_5
+			bool
+			prompt "2.5 dB"
+			
+		config ADC_ATTEN_DB_6
+			bool
+			prompt "6 dB"
+			
+		config ADC_ATTEN_DB_11
+			bool
+			prompt "11 dB"
+	endchoice
+endmenu
